@@ -1,15 +1,16 @@
 import css from "./NoteForm.module.css"
-import { Formik } from "formik"
+import { Formik, Form, Field } from "formik"
 
-
+const initialFormValues = {title: ""}
 export default function () {
-    <Formik
-    initialValues={ }
-    onSubmit={}>
-    <form className={css.form}>
+  const handleSubmit = (values) => {}
+  return  <Formik
+    initialValues={initialFormValues}
+    onSubmit={handleSubmit}>
+    <Form className={css.form}>
   <div className={css.formGroup}>
     <label htmlFor="title">Title</label>
-    <input id="title" type="text" name="title" className={css.input} />
+    <Field id="title" type="text" name="title" className={css.input} />
     <span name="title" className={css.error} />
   </div>
 
@@ -48,6 +49,6 @@ export default function () {
       Create note
     </button>
   </div>
-        </form>
+        </Form>
         </Formik>
 }
