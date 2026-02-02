@@ -1,9 +1,15 @@
 import css from "./NoteForm.module.css"
-import { Formik, Form, Field } from "formik"
+import { Formik, Form, Field, type FormikHelpers } from "formik"
 
-const initialFormValues = {title: ""}
+interface FormValues {
+  title: string
+}
+
+const initialFormValues: FormValues = {title: ""}
 export default function () {
-  const handleSubmit = (values) => {}
+  const handleSubmit = (values: FormValues, formikHelpers:FormikHelpers<FormValues>) => {
+    formikHelpers.resetForm()
+  }
   return  <Formik
     initialValues={initialFormValues}
     onSubmit={handleSubmit}>
