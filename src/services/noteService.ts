@@ -24,6 +24,6 @@ export const fetchNotes = async () => {
 };
 export const createNote = () => {};
 export const deleteNote = async (id: NoteId) => {
-  const { data } = await axios.delete<Note>(`/notes${id}`);
+  const { data } = await axios.delete<Note>(`${baseURL}/notes/${id}`, setting);
   return data;
 };

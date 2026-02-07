@@ -17,7 +17,7 @@ export default function App() {
         {/* Пагінація */}
 
         {<button className={css.button}>Create note +</button>}
-        <NoteList notes={data.notes || []} />
+        <NoteList notes={data?.notes || []} />
       </header>
     </div>
   );
