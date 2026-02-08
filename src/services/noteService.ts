@@ -16,13 +16,30 @@ const setting: settingProps = {
   },
 };
 
+interface createNoteProps {
+  noteData: {
+    title: string;
+    content: string;
+    tag: string;
+  };
+}
+
 export const fetchNotes = async () => {
   const { data } = await axios.get(`${baseURL}/notes`, setting);
   console.log(data);
 
   return data;
 };
-export const createNote = () => {};
+
+export const createNote = async ({ noteData }: createNoteProps) => {
+  const { data } = await axios.post<Note>(
+    `${baseURL}/notes`,
+    noteData,
+    setting,
+  );
+  return data;
+};
+
 export const deleteNote = async (id: NoteId) => {
   const { data } = await axios.delete<Note>(`${baseURL}/notes/${id}`, setting);
   return data;
