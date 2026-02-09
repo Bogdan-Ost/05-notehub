@@ -5,10 +5,7 @@ const token = import.meta.env.VITE_NOTEHUB_TOKEN;
 
 export interface NotesResponse {
   notes: Note[];
-  totalCount: number;
   totalPages: number;
-  currentPage: number;
-  perPage: number;
 }
 
 interface settingProps {
@@ -24,7 +21,7 @@ interface settingProps {
 interface createNoteProps {
   noteData: {
     title: string;
-    content: string;
+    content: string | null;
     tag: string;
   };
 }

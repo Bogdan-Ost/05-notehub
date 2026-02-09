@@ -14,7 +14,14 @@ export default function App() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [page, setPage] = useState(1);
-  const deboncedSetSearchQuery = useDebouncedCallback(setSearchQuery, 500);
+  const debouncedSetSearchQuery = useDebouncedCallback((value: string) => {
+    setSearchQuery(value);
+  }, 500);
+
+  const handleSearch = (value: string) => {
+    setPage(1);
+    debouncedSetSearchQuery(value);
+  };
 
   const toggleModal = () => setIsModalOpen((prev) => !prev);
   const { data, isLoading, isPlaceholderData } = useQuery({
@@ -27,14 +34,14 @@ export default function App() {
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox text={searchQuery} onSearch={deboncedSetSearchQuery} />
+        <SearchBox text={searchQuery} onSearch={handleSearch} />
         {!isLoading && totalPages > 1 && (
           <Pagination
             pageCount={totalPages}
-            forcePage={page - 1}
+            forcePage={page}
             onPageChange={(selected) => {
               if (!isPlaceholderData) {
-                setPage(selected + 1);
+                setPage(selected);
               }
             }}
           />
@@ -46,7 +53,9 @@ export default function App() {
         }
       </header>
       {isLoading ||
-        ((data?.notes?.length ?? 0) && <NoteList notes={data?.notes || []} />)}
+        (data?.notes && data.notes.length > 0 && (
+          <NoteList notes={data.notes} />
+        ))}
       {isModalOpen && (
         <Modal onClose={toggleModal}>
           <NoteForm onClose={toggleModal} />
