@@ -6,6 +6,7 @@ interface settingProps {
   params: {
     page: number;
     search: string;
+    perPage: number;
   };
 
   headers: { Authorization: string };
@@ -24,6 +25,7 @@ export const fetchNotes = async (mysearchtext: string) => {
     params: {
       page: 1,
       search: mysearchtext,
+      perPage: 12,
     },
     headers: {
       Authorization: `Bearer ${token}`,
