@@ -5,20 +5,22 @@ import { fetchNotes } from "../../services/noteService";
 import { useState } from "react";
 import NoteForm from "../NoteForm/NoteForm";
 import Modal from "../Modal/Modal";
+import SearchBox from "../SearchBox/SearchBox";
 
 export default function App() {
+  const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleModal = () => setIsModalOpen((prev) => !prev);
   const { data } = useQuery({
-    queryKey: ["notes"],
-    queryFn: fetchNotes,
+    queryKey: ["notes", searchQuery],
+    queryFn: () => fetchNotes(searchQuery),
   });
   console.log(data);
 
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        {/* Компонент SearchBox */}
+        <SearchBox text={searchQuery} onSearch={setSearchQuery} />
         {/* Пагінація */}
         {
           <button className={css.button} onClick={toggleModal}>
