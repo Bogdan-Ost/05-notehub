@@ -98,6 +98,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
           <button type="submit" className={css.submitButton} disabled={false}>
             Create note
           </button>
+          <ErrorMessage name="title" component="span" className={css.error} />
         </div>
       </Form>
     </Formik>

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import NoteList from "../NoteList/NoteList";
 import css from "./App.module.css";
 import { fetchNotes } from "../../services/noteService";
@@ -11,25 +11,32 @@ import { Pagination } from "../Pagination/Pagination";
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
-  const deboncedSetSearchQuery = useDebouncedCallback(setSearchQuery, 500);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const deboncedSetSearchQuery = useDebouncedCallback(setSearchQuery, 500);
 
   const toggleModal = () => setIsModalOpen((prev) => !prev);
-  const { data, isLoading } = useQuery({
-    queryKey: ["notes", searchQuery],
-    queryFn: () => fetchNotes(searchQuery),
+  const { data, isLoading, isPlaceholderData } = useQuery({
+    queryKey: ["notes", searchQuery, page],
+    queryFn: () => fetchNotes(searchQuery, page),
+    placeholderData: keepPreviousData,
   });
+  const totalPages = data?.totalPages ?? 0;
 
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
         <SearchBox text={searchQuery} onSearch={deboncedSetSearchQuery} />
-        {!isLoading && data?.totalPages > 1 && (
+        {!isLoading && totalPages > 1 && (
           <Pagination
-            pageCount={data?.totalPages}
+            pageCount={totalPages}
             forcePage={page - 1}
-            onPageChange={(selected) => setPage(selected + 1)}
+            onPageChange={(selected) => {
+              if (!isPlaceholderData) {
+                setPage(selected + 1);
+              }
+            }}
           />
         )}
         {
@@ -39,7 +46,7 @@ export default function App() {
         }
       </header>
       {isLoading ||
-        (data?.notes.length > 0 && <NoteList notes={data?.notes || []} />)}
+        ((data?.notes?.length ?? 0) && <NoteList notes={data?.notes || []} />)}
       {isModalOpen && (
         <Modal onClose={toggleModal}>
           <NoteForm onClose={toggleModal} />

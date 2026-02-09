@@ -2,6 +2,15 @@ import axios from "axios";
 import type { Note, NoteId } from "../types/note";
 const baseURL = "https://notehub-public.goit.study/api";
 const token = import.meta.env.VITE_NOTEHUB_TOKEN;
+
+export interface NotesResponse {
+  notes: Note[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+  perPage: number;
+}
+
 interface settingProps {
   params: {
     page: number;
@@ -20,10 +29,10 @@ interface createNoteProps {
   };
 }
 
-export const fetchNotes = async (mysearchtext: string) => {
+export const fetchNotes = async (mysearchtext: string, page: number) => {
   const setting: settingProps = {
     params: {
-      page: 1,
+      page,
       search: mysearchtext,
       perPage: 12,
     },
@@ -31,7 +40,7 @@ export const fetchNotes = async (mysearchtext: string) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  const { data } = await axios.get(`${baseURL}/notes`, setting);
+  const { data } = await axios.get<NotesResponse>(`${baseURL}/notes`, setting);
 
   return data;
 };
